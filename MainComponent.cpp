@@ -6,6 +6,14 @@
 
 namespace
 {
+#ifndef SPEX_APP_VERSION
+#define SPEX_APP_VERSION "0.0.0"
+#endif
+
+#ifndef SPEX_GIT_HASH
+#define SPEX_GIT_HASH "unknown"
+#endif
+
 constexpr int kFeatureCount = spex::numSpectralFeatures;
 
 const std::array<const char*, kFeatureCount> kFeatureNames
@@ -56,6 +64,11 @@ const std::array<juce::Colour, kFeatureCount> kFeatureColours
     juce::Colour(0xffa78bfa),
     juce::Colour(0xffa78bfa)
 };
+
+juce::String getBuildDisplayText()
+{
+    return "v" SPEX_APP_VERSION " (" SPEX_GIT_HASH ")";
+}
 
 juce::String csvHeaderName(int featureIndex)
 {
@@ -473,6 +486,13 @@ void MainComponent::paint(juce::Graphics& g)
                        static_cast<float>(featurePanelBounds.getBottom()));
 
     paintFeaturePanel(g, featurePanelBounds);
+
+    g.setColour(juce::Colour(0x55ffffff));
+    g.setFont(11.0f);
+    g.drawText(getBuildDisplayText(),
+               getLocalBounds().reduced(14, 8),
+               juce::Justification::bottomRight,
+               false);
 }
 
 void MainComponent::resized()
